@@ -13,6 +13,8 @@ public class Player : MonoBehaviour
     private GameObject _laserPrefab;
     [SerializeField]
     private GameObject _shieldVisualizer;
+    private int _shieldStrength;
+    SpriteRenderer _shieldColor;
     [SerializeField]
     private GameObject _tripleShotPrefab;
     [SerializeField]
@@ -45,7 +47,9 @@ public class Player : MonoBehaviour
         //If "Transform", object in T bracket will say "Transform". private variable would read "private Transform _spawnManager"
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UI_Manager>();
+        _shieldColor = _shieldVisualizer.GetComponent<SpriteRenderer>();
          _audioSource = GetComponent<AudioSource>();
+        
         if (_spawnManager == null)
         {
             Debug.LogError("The Spawn Manager is NULL");
@@ -62,6 +66,10 @@ public class Player : MonoBehaviour
         {
             //.clip is a Unity function that allows audioclips to be played. 
             _audioSource.clip = _laserSoundClip;
+        }
+        if(_shieldColor == null)
+        {
+            Debug.LogError("The shield colors are NULL");
         }
        
        
@@ -109,6 +117,16 @@ public class Player : MonoBehaviour
         {
             transform.Translate(direction * (_speed * 3f) * 1 * Time.deltaTime);
         }
+        
+        //left shift key 'booster' method
+        if(Input.GetKey(KeyCode.LeftShift))
+        {
+            transform.Translate(direction * (_speed * 3) * Time.deltaTime);
+        }
+        else
+        {
+            transform.Translate(direction * (_speed * 1) * Time.deltaTime);
+        }
     }
     void FireLaser()
     {
@@ -127,12 +145,27 @@ public class Player : MonoBehaviour
     }
     public void Damage()
     {
-        if(_isShieldsActive == true)
+
+        if (_isShieldsActive == true)
         {
-            //No method for pausing lives required. When Damage gets called, it asks if shields are active. if they are, 'return' stops Damage method after. 
-            _isShieldsActive = false;
-            _shieldVisualizer.SetActive(false);
-            return;
+            _shieldStrength--;
+            if (_shieldStrength == 0)
+            {
+                //No method for pausing lives required. When Damage gets called, it asks if shields are active. if they are, 'return' stops Damage method after. 
+                _isShieldsActive = false;
+                _shieldVisualizer.SetActive(false);
+                return;
+            }
+            else if (_shieldStrength == 1)
+            {
+                _shieldColor.color = Color.red;
+                return;
+            }
+            else if (_shieldStrength == 2)
+            {
+                _shieldColor.color = Color.green;
+                return;
+            }
         }
         _lives --;
 
@@ -177,6 +210,25 @@ public class Player : MonoBehaviour
     {
         _isShieldsActive = true;
         _shieldVisualizer.SetActive(true);
+
+        if (_shieldStrength < 3)
+        {
+            _shieldStrength++;
+            _isShieldsActive = true;
+            _shieldVisualizer.SetActive(true);
+        }
+        if (_shieldStrength == 1)
+        {
+            _shieldColor.color = Color.red;
+        }
+        else if (_shieldStrength == 2)
+        {
+            _shieldColor.color = Color.green;
+        }
+        else if (_shieldStrength == 3)
+        {
+            _shieldColor.color = Color.cyan;
+        }
     }
     public void AddScore(int points)
     {
