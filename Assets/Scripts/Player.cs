@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
+    private int _ammoCount = 15;
+    [SerializeField]
     private GameObject _shieldVisualizer;
     private int _shieldStrength;
     SpriteRenderer _shieldColor;
@@ -82,6 +84,10 @@ public class Player : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
+            if(_ammoCount == 0)
+            {
+                return;
+            }
             FireLaser();
         }
         
@@ -130,18 +136,32 @@ public class Player : MonoBehaviour
     }
     void FireLaser()
     {
-        _canFire = Time.time + _fireRate;
 
-        if (_isTripleShotActive == true)
+        if (_ammoCount <= 15)
         {
-            //position was already set in Unity thus no new Vector 3.
-            Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
-        }
-        else
-        {
-            Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
-        }
+            if (_isTripleShotActive == true)
+            {
+                Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+                _ammoCount = _ammoCount - 3;
+                _uiManager.UpdateAmmo(_ammoCount);
+            }
+            else
+            {
+                Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+                _ammoCount = _ammoCount - 1;
+                _uiManager.UpdateAmmo(_ammoCount);
+            }
+            AmmoCap();
+        }    
+        _canFire = Time.time + _fireRate;
         _audioSource.Play();
+    }
+    void AmmoCap()
+    {
+        if(_ammoCount <= 0)
+        {
+            _ammoCount = 0;
+        }
     }
     public void Damage()
     {
