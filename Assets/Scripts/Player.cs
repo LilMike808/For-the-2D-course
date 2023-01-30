@@ -173,6 +173,20 @@ public class Player : MonoBehaviour
         AmmoCap();
         _uiManager.UpdateAmmo(_ammoCount);
     }
+    public void HealthCollected()
+    {
+        _lives = _lives + 1;
+        if(_lives >= 3)
+        {
+            _lives = 3;
+            _rightEngine.SetActive(false);
+        }
+        else if (_lives == 2)
+        {
+            _leftEngine.SetActive(false);
+        }
+        _uiManager.UpdateLives(_lives);
+    }
     public void Damage()
     {
 

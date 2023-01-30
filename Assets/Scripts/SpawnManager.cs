@@ -47,7 +47,7 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(3.0f);
         while(_stopSpawning == false)
         {
-            int randomPowerup = Random.Range(0, 4);
+            int randomPowerup = Random.Range(0, 5);
             //posToSpawn is only local to this while loop                       
             Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f),7, 0);
             Instantiate(powerups[randomPowerup], posToSpawn, Quaternion.identity);
