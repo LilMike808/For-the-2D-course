@@ -162,6 +162,16 @@ public class Player : MonoBehaviour
         {
             _ammoCount = 0;
         }
+        else if(_ammoCount >= 15)
+        {
+            _ammoCount = 15;
+        }
+    }
+    public void AmmoCollected()
+    {
+        _ammoCount = 15;
+        AmmoCap();
+        _uiManager.UpdateAmmo(_ammoCount);
     }
     public void Damage()
     {

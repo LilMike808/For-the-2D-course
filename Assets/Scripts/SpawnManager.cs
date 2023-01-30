@@ -24,7 +24,7 @@ public class SpawnManager : MonoBehaviour
         StartCoroutine(SpawnPowerupRoutine());
 
     }
-        
+    
     IEnumerator SpawnEnemyRoutine()
     {
         yield return new WaitForSeconds(3.0f);
@@ -47,7 +47,7 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(3.0f);
         while(_stopSpawning == false)
         {
-            int randomPowerup = Random.Range(0, 3);
+            int randomPowerup = Random.Range(0, 4);
             //posToSpawn is only local to this while loop                       
             Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f),7, 0);
             Instantiate(powerups[randomPowerup], posToSpawn, Quaternion.identity);
