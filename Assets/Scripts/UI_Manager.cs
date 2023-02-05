@@ -14,6 +14,10 @@ public class UI_Manager : MonoBehaviour
     [SerializeField]
     private Text _ammoText;
     [SerializeField]
+    private Slider _thrusterSlider;
+    [SerializeField]
+    private Text _fuelPercentageText;
+    [SerializeField]
     private Image _livesImg;
     [SerializeField]
     private Sprite[] _liveSprites;
@@ -54,6 +58,11 @@ public class UI_Manager : MonoBehaviour
     public void UpdateAmmo(int ammocount)
     {
         _ammoText.text = "Ammo: " + ammocount + "/15";
+    }
+    public void UpdateThruster(float fuelpercentage)
+    {
+        _thrusterSlider.value = fuelpercentage;
+        _fuelPercentageText.text = Mathf.RoundToInt(fuelpercentage) + "%";
     }
     void GameOverSequence()
     {

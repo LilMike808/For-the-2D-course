@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     //delete this comment when C# "If statements" is completed.
     //delete this comment when C# "Coroutines" is completed.
     //look up C# "Switch Statments".
+    private CameraShake _camShake;
     private float _speed = 3.5f;
     [SerializeField]
     private GameObject _laserPrefab;
@@ -20,9 +21,18 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _tripleShotPrefab;
     [SerializeField]
+    private GameObject _multiDirectionalLasersPrefab;
+    [SerializeField]
     private GameObject _rightEngine;
     [SerializeField]
     private GameObject _leftEngine;
+    [SerializeField]
+    private GameObject _thruster;
+    [SerializeField]
+    private float _fuelPercentage = 100f;
+    [SerializeField]
+    private float _refuelSpeed;
+    private bool _isThrusterActive;
     [SerializeField]
     private float _fireRate = 0.5f;
     private float _canFire = -1f;
@@ -35,6 +45,7 @@ public class Player : MonoBehaviour
     private bool _isTripleShotActive = false;
     private bool _isSpeedBoostActive = false;
     private bool _isShieldsActive = false;
+    private bool _isGiantLasersActive = false;
     [SerializeField]
     private AudioClip _laserSoundClip;
     [SerializeField]
@@ -51,6 +62,7 @@ public class Player : MonoBehaviour
         _uiManager = GameObject.Find("Canvas").GetComponent<UI_Manager>();
         _shieldColor = _shieldVisualizer.GetComponent<SpriteRenderer>();
          _audioSource = GetComponent<AudioSource>();
+        _camShake = Camera.main.GetComponent<CameraShake>();
         
         if (_spawnManager == null)
         {
@@ -73,6 +85,10 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("The shield colors are NULL");
         }
+        if(_camShake == null)
+        {
+            Debug.Log("Camera Shake script is NULL");
+        }
        
        
     }
@@ -89,9 +105,7 @@ public class Player : MonoBehaviour
                 return;
             }
             FireLaser();
-        }
-        
-      
+        }     
     }
     void CalculateMovement()
     {
@@ -106,7 +120,7 @@ public class Player : MonoBehaviour
         //transform.Translate(Vector3.up * verticalInput * _speed * Time.deltaTime);
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
         transform.Translate(direction * _speed * Time.deltaTime);
-        
+
         //prior if statement prohibited Player from moving above 0 and below -4.8f on the Y which our mathf.Clamp equation now executes.
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -4.8f, 0), 0);
 
@@ -119,19 +133,43 @@ public class Player : MonoBehaviour
         {
             transform.position = new Vector3(11, transform.position.y, 0);
         }
-        if(_isSpeedBoostActive == true)
+
+        if (_isSpeedBoostActive == true)
         {
             transform.Translate(direction * (_speed * 3f) * 1 * Time.deltaTime);
         }
-        
+
         //left shift key 'booster' method
-        if(Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift) && _fuelPercentage > 0)
         {
-            transform.Translate(direction * (_speed * 3) * Time.deltaTime);
+            if (_isSpeedBoostActive)
+            {
+                ActivateThruster();
+                StopCoroutine(ActivateRefuel());
+            }
+            else
+            {
+                ActivateThruster();
+                StopCoroutine(ActivateRefuel());
+                transform.Translate(direction * (_speed * 1.7f) * Time.deltaTime);
+            }
         }
-        else
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            transform.Translate(direction * (_speed * 1) * Time.deltaTime);
+            _isThrusterActive = false;
+            {
+                if (_isSpeedBoostActive)
+                {
+                    _thruster.SetActive(false);
+                    StartCoroutine(ActivateRefuel());
+                }
+                else
+                {
+                    _thruster.SetActive(false);
+                    StartCoroutine(ActivateRefuel());
+                    transform.Translate(direction * (_speed * 1.7f) * Time.deltaTime);
+                }
+            }
         }
     }
     void FireLaser()
@@ -145,6 +183,12 @@ public class Player : MonoBehaviour
                 _ammoCount = _ammoCount - 3;
                 _uiManager.UpdateAmmo(_ammoCount);
             }
+            else if (_isGiantLasersActive == true)
+            {
+                Instantiate(_multiDirectionalLasersPrefab, transform.position, Quaternion.identity);
+                _ammoCount = _ammoCount - 1;
+                _uiManager.UpdateAmmo(_ammoCount);
+            }
             else
             {
                 Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
@@ -152,7 +196,8 @@ public class Player : MonoBehaviour
                 _uiManager.UpdateAmmo(_ammoCount);
             }
             AmmoCap();
-        }    
+        }
+        
         _canFire = Time.time + _fireRate;
         _audioSource.Play();
     }
@@ -165,6 +210,46 @@ public class Player : MonoBehaviour
         else if(_ammoCount >= 15)
         {
             _ammoCount = 15;
+        }
+    }
+    void ActivateThruster()
+    {
+        _isThrusterActive = true;
+        if(_fuelPercentage > 0)
+        {
+            _thruster.SetActive(true);
+            _fuelPercentage -= 15 * 2 * Time.deltaTime;
+            _uiManager.UpdateThruster(_fuelPercentage);
+        }
+        else if(_fuelPercentage <= 0)
+        {
+            _thruster.SetActive(false);
+            _fuelPercentage = 0.0f;
+            _uiManager.UpdateThruster(_fuelPercentage);
+        }
+    }
+    IEnumerator ActivateRefuel()
+    {
+        while(_fuelPercentage != 100 && _isThrusterActive == false)
+        {
+            yield return new WaitForSeconds(1.0f);
+            _fuelPercentage += 30 * _refuelSpeed * Time.deltaTime;
+            _uiManager.UpdateThruster(_fuelPercentage);
+
+            if (_fuelPercentage >= 100)
+            {
+                _fuelPercentage = 100;
+                _uiManager.UpdateThruster(_fuelPercentage);
+                break;
+            }
+            else if (_fuelPercentage <= 0)
+            {
+                _fuelPercentage = 0;
+                _uiManager.UpdateThruster(_fuelPercentage);
+                break;
+
+            }
+            
         }
     }
     public void AmmoCollected()
@@ -189,6 +274,7 @@ public class Player : MonoBehaviour
     }
     public void Damage()
     {
+        StartCoroutine(_camShake.ShakeCamera());
 
         if (_isShieldsActive == true)
         {
@@ -249,6 +335,16 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(5.0f);
         _isSpeedBoostActive = false;
+    }
+    public void MultiDirectionalLasersActive()
+    {
+        _isGiantLasersActive = true;
+        StartCoroutine(GiantLaserPowerDownRoutine());
+    }
+    IEnumerator GiantLaserPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _isGiantLasersActive = false;
     }
     public void ShieldsActive()
     {

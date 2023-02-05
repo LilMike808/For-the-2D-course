@@ -5,8 +5,11 @@ public class Powerup : MonoBehaviour
     [SerializeField]
     private int powerupID;
     private float _speed = 3f;
+    private float _rotateSpeed = 1000.0f;
     [SerializeField]
     private AudioClip _clip;
+    [SerializeField]
+    private bool _isMultiLaserPowerup;
     // Start is called before the first frame update
     
 
@@ -19,6 +22,12 @@ public class Powerup : MonoBehaviour
         if (transform.position.y < -5f)
         {
             Destroy(this.gameObject);
+        }
+
+        if(_isMultiLaserPowerup == true)
+        {
+            _speed = 1.5f;
+            transform.Rotate(Vector3.back * _rotateSpeed * Time.deltaTime);
         }
     }
 
@@ -47,6 +56,9 @@ public class Powerup : MonoBehaviour
                         break;
                     case 4:
                         player.HealthCollected();
+                        break;
+                    case 5:
+                        player.MultiDirectionalLasersActive();
                         break;
                     default:
                         Debug.Log("Default Value");
