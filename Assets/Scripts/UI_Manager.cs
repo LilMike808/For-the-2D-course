@@ -18,6 +18,8 @@ public class UI_Manager : MonoBehaviour
     [SerializeField]
     private Text _fuelPercentageText;
     [SerializeField]
+    private Text _waveDisplay;
+    [SerializeField]
     private Image _livesImg;
     [SerializeField]
     private Sprite[] _liveSprites;
@@ -80,6 +82,20 @@ public class UI_Manager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             _gameOverText.text = "";
             yield return new WaitForSeconds(0.5f);
+        }
+    }
+    public void DisplayWaveNumber(int wavenumber)
+    {
+        _waveDisplay.text = "Wave:" + wavenumber;
+        _waveDisplay.gameObject.SetActive(true);
+        StartCoroutine(WaveDisplayRoutine());
+    }
+    IEnumerator WaveDisplayRoutine()
+    {
+        while(_waveDisplay == true)
+        {
+            yield return new WaitForSeconds(2.5f);
+            _waveDisplay.gameObject.SetActive(false);
         }
     }
 

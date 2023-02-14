@@ -60,6 +60,9 @@ public class Powerup : MonoBehaviour
                     case 5:
                         player.MultiDirectionalLasersActive();
                         break;
+                    case 6:
+                        player.SlowSpeedActive();
+                        break;
                     default:
                         Debug.Log("Default Value");
                         break;

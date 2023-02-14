@@ -46,6 +46,7 @@ public class Player : MonoBehaviour
     private bool _isSpeedBoostActive = false;
     private bool _isShieldsActive = false;
     private bool _isGiantLasersActive = false;
+    private bool _isSlowSpeedActive = false;
     [SerializeField]
     private AudioClip _laserSoundClip;
     [SerializeField]
@@ -140,7 +141,7 @@ public class Player : MonoBehaviour
         }
 
         //left shift key 'booster' method
-        if (Input.GetKey(KeyCode.LeftShift) && _fuelPercentage > 0)
+        if (Input.GetKey(KeyCode.LeftShift) && _fuelPercentage > 0 && _isSlowSpeedActive == false)
         {
             if (_isSpeedBoostActive)
             {
@@ -170,6 +171,18 @@ public class Player : MonoBehaviour
                     transform.Translate(direction * (_speed * 1.7f) * Time.deltaTime);
                 }
             }
+        }
+        else if (_isSlowSpeedActive == true)
+        {
+            transform.Translate(direction * (_speed / 10) * Time.deltaTime);
+            if(Input.GetKey(KeyCode.LeftShift))
+            {
+                transform.Translate(direction * (_speed / 7) * Time.deltaTime);
+            }
+        }
+        else
+        {
+            transform.Translate(direction * _speed * Time.deltaTime);
         }
     }
     void FireLaser()
@@ -335,6 +348,16 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(5.0f);
         _isSpeedBoostActive = false;
+    }
+    public void SlowSpeedActive()
+    {
+        _isSlowSpeedActive = true;
+        StartCoroutine(SlowSpeedPowerDown());
+    }
+    IEnumerator SlowSpeedPowerDown()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _isSlowSpeedActive = false;
     }
     public void MultiDirectionalLasersActive()
     {

@@ -14,9 +14,15 @@ public class Enemy : MonoBehaviour
     private GameObject _laserPrefab;
     private float _fireRate = 3.0f;
     private float _canFire = -1f;
+    private int _enemyMovement;
+    private SpawnManager _spawnManager;
     // Start is called before the first frame update
     void Start()
     {
+        _spawnManager = GameObject.FindObjectOfType<SpawnManager>();
+
+        _enemyMovement = Random.Range(1, 4);
+
         _player = GameObject.Find("Player").GetComponent<Player>();
         _anim = GetComponent<Animator>();
         _audioSource = GetComponent<AudioSource>();
@@ -54,7 +60,20 @@ public class Enemy : MonoBehaviour
     }
     void CalculateMovement()
     {
-        transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        switch (_enemyMovement)
+        {
+            case 1:
+                transform.Translate((Vector3.down + Vector3.left) * (_speed / 2)* Time.deltaTime);
+                break;
+            case 2:
+                transform.Translate((Vector3.down + Vector3.right) * (_speed / 2) * Time.deltaTime);
+                break;
+            case 3:
+                transform.Translate(Vector3.down * _speed * Time.deltaTime);
+                break;
+            default:
+                break;
+        }
         if (transform.position.y < -5f)
         {
             float RandomX = Random.Range(-8f, 8f);
@@ -86,10 +105,10 @@ public class Enemy : MonoBehaviour
             _anim.SetTrigger("OnEnemyDeath");
             _speed = 0;
             _audioSource.Play();
+            _spawnManager.EnemyDeath();
             //Collider is destroyed to disable explosion sound after one shot.
             Destroy(GetComponent<Collider2D>());
-            Destroy(this.gameObject, 2.3f);
-            
+            Destroy(this.gameObject, 2.3f);           
         }
     }
 }
