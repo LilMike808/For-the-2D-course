@@ -15,7 +15,15 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject[] rarepowerups;
     [SerializeField]
-    private GameObject[] _enemyType;
+    private GameObject[] frequentpowerups;
+    [SerializeField]
+    private GameObject[] commonenemies;
+    [SerializeField]
+    private GameObject[] rareenemies;
+    [SerializeField]
+    private GameObject[] UFO;
+    [SerializeField]
+    private GameObject[] enemy4;
     private bool _stopSpawning = false;
     private int _waveNumber;
     private int _enemiesDead;
@@ -36,47 +44,126 @@ public class SpawnManager : MonoBehaviour
             _stopSpawning = false;
             _enemiesDead = 0;
             _waveNumber = wavenumber;
-            _uiManager.DisplayWaveNumber(_waveNumber);
+            _uiManager.DisplayWaveNumber(_waveNumber);           
             _enemiesLeft = _waveNumber + 10;
             _maxEnemies = _waveNumber + 10;
-            StartCoroutine(SpawnEnemyRoutine());
             StartCoroutine(SpawnPowerupRoutine());
             StartCoroutine(SpawnRarePowerupRoutine());
+            StartCoroutine(SpawnFrequentPowerupRoutine());            
+            
+            if(wavenumber >= 1)
+            {
+                StartCoroutine(SpawnEnemyRoutine());
+            }
+            if (wavenumber >= 2)
+            {              
+                StartCoroutine(SpawnRareEnemyRoutine());
+            }
+            if(wavenumber >= 3)
+            {
+                StartCoroutine(SpawnUFOEnemyRoutine());
+            }
+            if(wavenumber >= 4)
+            {
+                StartCoroutine(SpawnEnemy4Routine());
+            }
+            if(wavenumber > 5)
+            {
+                _stopSpawning = true;
+            }
+            
         }
-
     }
-    
+
     IEnumerator SpawnEnemyRoutine()
     {
         yield return new WaitForSeconds(3.0f);
-        
-        while(_stopSpawning == false && _enemiesDead <= _maxEnemies)
+
+        while (_stopSpawning == false && _enemiesDead <= _maxEnemies)
         {
             Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
-            GameObject newEnemy = Instantiate(_enemyType[Random.Range(0,2)], posToSpawn, Quaternion.identity);
+            GameObject newEnemy = Instantiate(commonenemies[Random.Range(0, 1)], posToSpawn, Quaternion.identity);
             //because newEnemy equals the Instantiate process and is a GameObject, we can access the parent object through its transform
             //which is assigned to the transform of _enemyContainer.
             newEnemy.transform.parent = _enemyContainer.transform;
             _enemiesLeft--;
-            if(_enemiesLeft == 0)
+            if (_enemiesLeft <= 0)
             {
+                _enemiesLeft = 0;
                 _stopSpawning = true;
-            }           
+            }
             yield return new WaitForSeconds(5.0f);
         }
-        StartSpawning(_waveNumber + 1);     
+        StartSpawning(_waveNumber + 1);
+        StartCoroutine(SpawnRareEnemyRoutine());
+        
     }
+    IEnumerator SpawnRareEnemyRoutine()
+    {
+        while (_stopSpawning == false && _enemiesDead <= _maxEnemies)
+        {
+            Vector3 posToSpawn = new Vector3(-11.75F, Random.Range(2, 6.5f), 0);
+            GameObject newEnemy = Instantiate(rareenemies[Random.Range(0, 1)], posToSpawn, Quaternion.identity);
+            newEnemy.transform.parent = _enemyContainer.transform;
+            _enemiesLeft--;
+            if (_enemiesLeft <= 0)
+            {
+                _enemiesLeft = 0;
+                _stopSpawning = true;
+            }
+            yield return new WaitForSeconds(5.0f);
+        }
+        StartSpawning(_waveNumber + 1);
+    }
+    IEnumerator SpawnUFOEnemyRoutine()
+    {
+        yield return new WaitForSeconds(4.0f);
+        while (_stopSpawning == false && _enemiesDead <= _maxEnemies)
+        {
+            Vector3 posToSpawn = new Vector3(-11.75f, -5, 0);
+            GameObject newEnemy = Instantiate(UFO[Random.Range(0, 1)], posToSpawn, Quaternion.identity);
+            newEnemy.transform.parent = _enemyContainer.transform;
+            _enemiesLeft--;
+            if (_enemiesLeft <= 0)
+            {
+                _enemiesLeft = 0;
+                _stopSpawning = true;
+            }
+            yield return new WaitForSeconds(5.0f);
+        }
+        StartSpawning(_waveNumber + 1);
+    }
+    IEnumerator SpawnEnemy4Routine()
+    {
+        yield return new WaitForSeconds(3.0f);
+
+        while (_stopSpawning == false && _enemiesDead <= _maxEnemies)
+        {
+            Vector3 posToSpawn = new Vector3(Random.Range(0f, 8f), 7, 0);
+            GameObject newEnemy = Instantiate(enemy4[Random.Range(0, 1)], posToSpawn, Quaternion.identity);
+            newEnemy.transform.parent = _enemyContainer.transform;
+            _enemiesLeft--;
+            if (_enemiesLeft <= 0)
+            {
+                _enemiesLeft = 0;
+                _stopSpawning = true;
+            }
+            yield return new WaitForSeconds(5.0f);
+        }
+        StartSpawning(_waveNumber + 1);
+    }
+    
+
     IEnumerator SpawnPowerupRoutine()
     {
         yield return new WaitForSeconds(3.0f);
         while(_stopSpawning == false)
         {
-            int randomPowerup = Random.Range(0, 6);
+            int randomPowerup = Random.Range(0, 3);
             //posToSpawn is only local to this while loop                       
             Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f),7, 0);
             Instantiate(powerups[randomPowerup], posToSpawn, Quaternion.identity);
             yield return new WaitForSeconds(Random.Range(3f, 8f));
-
         }
     }
     IEnumerator SpawnRarePowerupRoutine()
@@ -84,12 +171,22 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(20.0f);
         while (_stopSpawning == false)
         {
-            int randomPowerup = Random.Range(0, 1);
+            int randomPowerup = Random.Range(0, 3);
             //posToSpawn is only local to this while loop                       
             Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
             Instantiate(rarepowerups[randomPowerup], posToSpawn, Quaternion.identity);
             yield return new WaitForSeconds(Random.Range(15f, 30f));
-
+        }
+    }
+    IEnumerator SpawnFrequentPowerupRoutine()
+    {
+        yield return new WaitForSeconds(2.0f);
+        while(_stopSpawning == false)
+        {
+            int randomPowerup = Random.Range(0, 1);
+            Vector3 PosToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
+            Instantiate(frequentpowerups[randomPowerup], PosToSpawn, Quaternion.identity);
+            yield return new WaitForSeconds(Random.Range(2f, 6f));
         }
     }
     public void OnPlayerDeath()
@@ -99,13 +196,10 @@ public class SpawnManager : MonoBehaviour
     public void EnemyDeath()
     {
         _enemiesDead++;
-        if(_enemiesLeft == 0 && _enemiesDead == _maxEnemies)
+        if(_enemiesDead == _maxEnemies)
         {
+            new WaitForSeconds(3.0f);
             _waveNumber++;
-            if(_waveNumber == 3)
-            {
-                Debug.Log("Wave 3!!");
-            }
             _uiManager.DisplayWaveNumber(_waveNumber);
         }
     }

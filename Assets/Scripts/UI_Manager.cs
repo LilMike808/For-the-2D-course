@@ -28,7 +28,7 @@ public class UI_Manager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _scoreText.text = "Score:";
+        _scoreText.text = "Score: ";
         _ammoText.text = "Ammo: 15/15";
         _gameOverText.gameObject.SetActive(false);
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
@@ -46,16 +46,19 @@ public class UI_Manager : MonoBehaviour
     }
     public void UpdateScore(int PlayerScore)
     {
-        _scoreText.text = "Score:" + PlayerScore.ToString();
+        _scoreText.text = "Score: " + PlayerScore.ToString();
     }
     public void UpdateLives(int currentLives)
     {
+        if(currentLives <= 0)
+        {
+            currentLives = 0;
+        }
         _livesImg.sprite = _liveSprites[currentLives];
-
         if (currentLives <= 0)
         {
             GameOverSequence();
-        }
+        }    
     }
     public void UpdateAmmo(int ammocount)
     {
@@ -86,7 +89,7 @@ public class UI_Manager : MonoBehaviour
     }
     public void DisplayWaveNumber(int wavenumber)
     {
-        _waveDisplay.text = "Wave:" + wavenumber;
+        _waveDisplay.text = "Wave: " + wavenumber;
         _waveDisplay.gameObject.SetActive(true);
         StartCoroutine(WaveDisplayRoutine());
     }

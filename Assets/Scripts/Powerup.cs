@@ -19,7 +19,7 @@ public class Powerup : MonoBehaviour
         //move down at the speed of 3
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
         //destroy object once we leave screen
-        if (transform.position.y < -5f)
+        if (transform.position.y < -7f)
         {
             Destroy(this.gameObject);
         }

@@ -24,32 +24,16 @@ public class Enemy2 : MonoBehaviour
             Debug.LogError("The Player is NULL");
         }
         _spawnManager = GameObject.FindObjectOfType<SpawnManager>();
-        _enemyMovement = Random.Range(1, 3);
         _anim = GetComponent<Animator>();
-        _audioSource = GetComponent<AudioSource>();
+        _audioSource = GetComponent<AudioSource>(); 
+        
+        _enemyMovement = Random.Range(1, 3);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(_enemyMovement == 1)
-        {
-            transform.Translate(Vector3.left * _speed * Time.deltaTime);
-        }
-        if(_enemyMovement == 2)
-        {
-            transform.Translate(Vector3.right * _speed * Time.deltaTime);
-        }
-        if(transform.position.x > 11.75f)
-        {
-            float randomx = Random.Range(-1f, 5.60f);
-            transform.position = new Vector3(-11.75f, randomx, 0);
-        }
-        if(transform.position.x < -11.75f)
-        {
-            float randomy = Random.Range(-1f, 5.60f);
-            transform.position = new Vector3(11.75f, randomy, 0);
-        }
+        CalculateMovement();
 
         if (Time.time > _canFire && _speed > 0)
         {
@@ -62,6 +46,28 @@ public class Enemy2 : MonoBehaviour
             {
                 Lasers[i].AssignEnemyLaser();
             }
+        }
+    }
+    void CalculateMovement()
+    {
+
+        if (_enemyMovement == 1)
+        {
+            transform.Translate(Vector3.left * _speed * Time.deltaTime);
+        }
+        if (_enemyMovement == 2)
+        {
+            transform.Translate(Vector3.right * _speed * Time.deltaTime);
+        }
+        if (transform.position.x > 11.75f)
+        {
+            float randomx = Random.Range(-1f, 5.60f);
+            transform.position = new Vector3(-11.75f, randomx, 0);
+        }
+        if (transform.position.x < -11.75f)
+        {
+            float randomy = Random.Range(-1f, 5.60f);
+            transform.position = new Vector3(11.75f, randomy, 0);
         }
     }
     private void OnTriggerEnter2D(Collider2D other)

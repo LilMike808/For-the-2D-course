@@ -16,6 +16,9 @@ public class Enemy : MonoBehaviour
     private float _canFire = -1f;
     private int _enemyMovement;
     private SpawnManager _spawnManager;
+    [SerializeField]
+    private GameObject _shieldVisualizer;
+    private bool _isShieldsActive = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -60,10 +63,11 @@ public class Enemy : MonoBehaviour
     }
     void CalculateMovement()
     {
+
         switch (_enemyMovement)
         {
             case 1:
-                transform.Translate((Vector3.down + Vector3.left) * (_speed / 2)* Time.deltaTime);
+                transform.Translate((Vector3.down + Vector3.left) * (_speed / 2) * Time.deltaTime);
                 break;
             case 2:
                 transform.Translate((Vector3.down + Vector3.right) * (_speed / 2) * Time.deltaTime);
@@ -74,7 +78,20 @@ public class Enemy : MonoBehaviour
             default:
                 break;
         }
-        if (transform.position.y < -5f)
+        
+        if (transform.position.y <= -7f)
+        {
+            float RandomX = Random.Range(-8f, 8f);
+            transform.position = new Vector3(RandomX, 7, 0);
+
+        }
+        if (transform.position.x <= -11.75f)
+        {
+            float RandomX = Random.Range(-8f, 8f);
+            transform.position = new Vector3(RandomX, 7, 0);
+
+        }
+        if (transform.position.x >= 11.75f)
         {
             float RandomX = Random.Range(-8f, 8f);
             transform.position = new Vector3(RandomX, 7, 0);
@@ -83,21 +100,40 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-       if(other.tag == "Player" && _speed > 0)
+        if (other.tag == "Player" && _speed > 0 && _isShieldsActive == true)
         {
             Player player = other.transform.GetComponent<Player>();
             if (player != null)
             {
                 player.Damage();
             }
+            _isShieldsActive = false;
+            _shieldVisualizer.SetActive(false);
+            return;
+        }
+        else if (other.tag == "Player" && _speed > 0 && _isShieldsActive == false)
+        {
+            Player player = other.transform.GetComponent<Player>();
+            if (player != null)
+            {
+                player.Damage();
+            }
+
             _anim.SetTrigger("OnEnemyDeath");
             _speed = 0;
             _audioSource.Play();
             _spawnManager.EnemyDeath();
             Destroy(this.gameObject, 2.3f);
         }
-        if(other.tag == "Laser")
+        if (other.tag == "Laser" && _isShieldsActive == true)
         {
+            Destroy(other.gameObject);
+            _isShieldsActive = false;
+            _shieldVisualizer.SetActive(false);
+            return;
+        }
+        if (other.tag == "Laser" && _isShieldsActive == false)
+        { 
             Destroy(other.gameObject);
             if (_player != null)
             {
