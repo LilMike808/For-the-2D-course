@@ -6,12 +6,16 @@ public class Enemy4 : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 15;
+    private float _fireRate = 1.1f;
+    private float _canFire = -1f;
     private Player _player;
     private Animator _anim;
     [SerializeField]
     private AudioSource _audioSource;
     private int _enemyMovement;
     private SpawnManager _spawnManager;
+    [SerializeField]
+    private GameObject _grenadePrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -26,27 +30,26 @@ public class Enemy4 : MonoBehaviour
     void Update()
     {
         CalculateMovement();
+        if (Time.time > _canFire && _speed > 0 && transform.position.y <= -3f)
+        {   
+            _canFire = Time.time + _fireRate;
+            Instantiate(_grenadePrefab, transform.position + new Vector3(0, 0.5f, 0), Quaternion.identity);
+        }
     }
     void CalculateMovement()
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
-
-        if(transform.position.y <= -3)
+        if (transform.position.y <= -4.2f)
         {
             transform.Translate((Vector3.right + Vector3.up) * _speed * Time.deltaTime);
         }
-
-        if(transform.position.x >= 11 && transform.position.y <= 0)
+        if (transform.position.x >= 10f)
         {
-            transform.position = new Vector3(-11f, -3, 0);
+            _speed = 6;
+            transform.position = new Vector3(-10, -5, 0);
         }
-        if(transform.position.x == -11f)
-        {
-            transform.Translate((Vector3.right + Vector3.up) * _speed * Time.deltaTime);
-        }
-            
-                
     }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player" && _speed > 0)
@@ -79,3 +82,6 @@ public class Enemy4 : MonoBehaviour
         }
     }
 }
+
+        
+
