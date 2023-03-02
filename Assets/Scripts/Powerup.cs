@@ -4,15 +4,20 @@ public class Powerup : MonoBehaviour
 {
     [SerializeField]
     private int powerupID;
-    private float _speed = 0f;
+    private float _speed = 3f;
     private float _rotateSpeed = 1000.0f;
     [SerializeField]
     private AudioClip _clip;
     [SerializeField]
     private bool _isMultiLaserPowerup;
+    [SerializeField]
+    private float _range = 5.5f;
+    private Player _player;
     // Start is called before the first frame update
-    
-
+    void Start()
+    {
+        _player = GameObject.Find("Player").GetComponent<Player>();
+    }
     // Update is called once per frame
     void Update()
     {
@@ -28,6 +33,11 @@ public class Powerup : MonoBehaviour
         {
             _speed = 1.5f;
             transform.Rotate(Vector3.back * _rotateSpeed * Time.deltaTime);
+        }
+        
+        if(Input.GetKey(KeyCode.C) && Vector3.Distance(_player.transform.position, transform.position) < _range)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, _speed * 2 * Time.deltaTime);
         }
     }
 
