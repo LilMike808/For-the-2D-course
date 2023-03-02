@@ -48,7 +48,7 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         CalculateMovement();
-        if(Time.time > _canFire && _speed > 0)
+        if (Time.time > _canFire && _speed > 0)
         {
             _fireRate = Random.Range(3f, 7f);
             _canFire = Time.time + _fireRate;
@@ -58,6 +58,24 @@ public class Enemy : MonoBehaviour
             for (int i = 0; i < Lasers.Length; i++)
             {
                 Lasers[i].AssignEnemyLaser();
+            }
+        }
+        Vector3 enemyOffset = (transform.position + new Vector3(0, -0.75f, 0));
+        
+        RaycastHit2D hit = Physics2D.Raycast(enemyOffset, Vector3.down * 10f, LayerMask.GetMask("PowerUps"));
+        if (hit.collider != null)
+        {
+            Debug.DrawRay(transform.position, Vector3.down * 10f, Color.red);
+            if (hit.collider.CompareTag("PowerUp"))
+            {
+                Debug.Log("The Powerup was detected");
+                GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
+                Laser[] Lasers = enemyLaser.GetComponentsInChildren<Laser>();
+                
+                for (int i = 0; i < Lasers.Length; i++)
+                {
+                    Lasers[i].AssignEnemyLaser();
+                }
             }
         }
     }

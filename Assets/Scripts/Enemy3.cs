@@ -28,8 +28,7 @@ public class Enemy3 : MonoBehaviour
     void Update()
     {
         CalculateMovement();
-        RamPlayer();
-        
+        RamPlayer();        
     }
     void RamPlayer()
     {
@@ -84,9 +83,7 @@ public class Enemy3 : MonoBehaviour
                 _speed = 0;
             }
             RamPlayer();
-
         }
-
     }
         
     private void OnTriggerEnter2D(Collider2D other)

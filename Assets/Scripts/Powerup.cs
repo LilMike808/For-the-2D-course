@@ -4,7 +4,7 @@ public class Powerup : MonoBehaviour
 {
     [SerializeField]
     private int powerupID;
-    private float _speed = 3f;
+    private float _speed = 0f;
     private float _rotateSpeed = 1000.0f;
     [SerializeField]
     private AudioClip _clip;
@@ -69,6 +69,11 @@ public class Powerup : MonoBehaviour
                 }
             }
             
+            Destroy(this.gameObject);
+        }
+        if(other.tag == "Laser")
+        {
+            Destroy(other.gameObject);
             Destroy(this.gameObject);
         }
     }
