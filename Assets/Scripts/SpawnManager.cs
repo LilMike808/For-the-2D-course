@@ -113,7 +113,6 @@ public class SpawnManager : MonoBehaviour
             }
             yield return new WaitForSeconds(5.0f);
         }
-        StartSpawning(_waveNumber + 1);
     }
     IEnumerator SpawnUFOEnemyRoutine()
     {
@@ -131,7 +130,6 @@ public class SpawnManager : MonoBehaviour
             }
             yield return new WaitForSeconds(5.0f);
         }
-        StartSpawning(_waveNumber + 1);
     }
     IEnumerator SpawnEnemy4Routine()
     {
@@ -149,8 +147,7 @@ public class SpawnManager : MonoBehaviour
                 _stopSpawning = true;
             }
             yield return new WaitForSeconds(5.0f);
-        }
-        StartSpawning(_waveNumber + 1);
+        }       
     }
     
 

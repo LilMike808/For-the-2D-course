@@ -9,7 +9,7 @@ public class Enemy2 : MonoBehaviour
     [SerializeField]
     private AudioSource _audioSource;
     private SpawnManager _spawnManager;
-    private float _speed = 7f;
+    private float _speed = 5.8f;
     private int _enemyMovement;
     [SerializeField]
     private GameObject _enemy2Lasers;
@@ -45,6 +45,16 @@ public class Enemy2 : MonoBehaviour
             for (int i = 0; i < Lasers.Length; i++)
             {
                 Lasers[i].AssignEnemyLaser();
+            }
+        }
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position, 1.5f, Vector3.down, LayerMask.GetMask("Laser"));
+
+        if(hit.collider != null)
+        {
+            if(hit.collider.CompareTag("Laser"))
+            {
+                Debug.Log("The Player Laser was detected");
+                transform.Translate(Vector3.right + Vector3.up * (_speed * 3) * Time.deltaTime);
             }
         }
     }

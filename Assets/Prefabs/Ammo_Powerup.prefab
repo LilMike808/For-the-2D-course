@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 1931691019628398549}
   - component: {fileID: 8168262080547316890}
   - component: {fileID: 5801918939996067491}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ammo_Powerup
-  m_TagString: Untagged
+  m_TagString: Powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -167,3 +167,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   powerupID: 3
   _clip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
+  _isMultiLaserPowerup: 0
+  _range: 3

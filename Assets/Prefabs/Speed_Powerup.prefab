@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 5461320550148888301}
   - component: {fileID: 1494489426879179436}
   - component: {fileID: 6958041483624060629}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Speed_Powerup
-  m_TagString: Untagged
+  m_TagString: Powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -147,6 +147,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   powerupID: 1
   _clip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
+  _isMultiLaserPowerup: 0
+  _range: 3
 --- !u!95 &6958041483624060629
 Animator:
   serializedVersion: 5

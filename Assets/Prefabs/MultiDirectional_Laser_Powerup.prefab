@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 234195397801736426}
   - component: {fileID: 4442530895463095194}
   - component: {fileID: 6106377333257027585}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MultiDirectional_Laser_Powerup
-  m_TagString: Untagged
+  m_TagString: Powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -100,6 +100,7 @@ MonoBehaviour:
   powerupID: 5
   _clip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
   _isMultiLaserPowerup: 1
+  _range: 3
 --- !u!61 &4442530895463095194
 BoxCollider2D:
   m_ObjectHideFlags: 0
