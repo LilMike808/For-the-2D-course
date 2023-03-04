@@ -11,7 +11,7 @@ public class Enemy3 : MonoBehaviour
     private SpawnManager _spawnManager;
     private float _speed = 2.5f;
     [SerializeField]
-    private float _range = 5f;
+    private float _range = 3f;
     private int _enemyMovement;
     private bool _stopTheRock = false;
     // Start is called before the first frame update
@@ -117,9 +117,32 @@ public class Enemy3 : MonoBehaviour
             _stopTheRock = true;
             _audioSource.Play();
             _spawnManager.EnemyDeath();
-            //Collider is destroyed to disable explosion sound after one shot.
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 2.3f);
-        } 
+        }
+        if (other.tag == "Missile")
+        {
+            Destroy(other.gameObject);
+            if (_player != null)
+            {
+                _player.AddScore(Random.Range(10, 15));
+            }
+            _anim.SetTrigger("OnEnemyDeath");
+            _speed = 0;
+            _audioSource.Play();
+            _spawnManager.EnemyDeath();
+            Destroy(GetComponent<Collider2D>());
+            Destroy(this.gameObject, 2.3f);
+        }
+
+
+
+
+
+
+
+
+
+
     }
 }

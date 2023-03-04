@@ -22,10 +22,9 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _spawnManager = GameObject.FindObjectOfType<SpawnManager>();
-
         _enemyMovement = Random.Range(1, 4);
 
+        _spawnManager = GameObject.FindObjectOfType<SpawnManager>();
         _player = GameObject.Find("Player").GetComponent<Player>();
         _anim = GetComponent<Animator>();
         _audioSource = GetComponent<AudioSource>();
@@ -164,6 +163,22 @@ public class Enemy : MonoBehaviour
             //Collider is destroyed to disable explosion sound after one shot.
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 2.3f);           
+        }
+        if (other.tag == "Missile")
+        {
+            Destroy(other.gameObject);
+            _shieldVisualizer.SetActive(false);
+            if(_player != null)
+            {
+                _player.AddScore(Random.Range(5, 7));
+            }
+            _anim.SetTrigger("OnEnemyDeath");
+            _speed = 0;
+            _audioSource.Play();
+            _spawnManager.EnemyDeath();
+            //Collider is destroyed to disable explosion sound after one shot.
+            Destroy(GetComponent<Collider2D>());
+            Destroy(this.gameObject, 2.3f);
         }
     }
 }

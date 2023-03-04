@@ -70,13 +70,27 @@ public class Enemy4 : MonoBehaviour
             Destroy(other.gameObject);
             if (_player != null)
             {
-                _player.AddScore(Random.Range(5, 7));
+                _player.AddScore(Random.Range(15, 20));
             }
             _anim.SetTrigger("OnEnemyDeath");
             _speed = 0;
             _audioSource.Play();
             _spawnManager.EnemyDeath();
             //Collider is destroyed to disable explosion sound after one shot.
+            Destroy(GetComponent<Collider2D>());
+            Destroy(this.gameObject, 2.3f);
+        }
+        if (other.tag == "Missile")
+        {
+            Destroy(other.gameObject);
+            if (_player != null)
+            {
+                _player.AddScore(Random.Range(15, 20));
+            }
+            _anim.SetTrigger("OnEnemyDeath");
+            _speed = 0;
+            _audioSource.Play();
+            _spawnManager.EnemyDeath();
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 2.3f);
         }

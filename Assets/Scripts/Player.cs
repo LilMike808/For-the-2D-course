@@ -29,6 +29,10 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _thruster;
     [SerializeField]
+    private GameObject _homingMissilePrefab;
+    private int _missileCount = 3;
+    private bool _isHomingMissileActive = false;
+    [SerializeField]
     private float _fuelPercentage = 100f;
     [SerializeField]
     private float _refuelSpeed;
@@ -99,14 +103,22 @@ public class Player : MonoBehaviour
         //because of how update functions, this method must be called here.
         CalculateMovement();
 
-        if(Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+        if(Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _isHomingMissileActive != true)
         {
             if(_ammoCount == 0)
             {
                 return;
             }
             FireLaser();
-        }     
+        }
+        if (Input.GetKeyDown(KeyCode.Space) && _isHomingMissileActive == true)
+        {
+            if(_missileCount == 0)
+            {
+                return;
+            }
+            HomingMissileFire();
+        }
     }
     void CalculateMovement()
     {
@@ -213,6 +225,19 @@ public class Player : MonoBehaviour
         
         _canFire = Time.time + _fireRate;
         _audioSource.Play();
+    }
+    void HomingMissileFire()
+    {
+        if(Input.GetKeyDown(KeyCode.Space) && _isHomingMissileActive == true)
+        {
+            Instantiate(_homingMissilePrefab, transform.position, Quaternion.identity);
+            _missileCount = _missileCount - 1;
+
+            if(_missileCount == 0)
+            {
+                _isHomingMissileActive = false;
+            }
+        }
     }
     void AmmoCap()
     {
@@ -398,6 +423,11 @@ public class Player : MonoBehaviour
         _score += points;
         _uiManager.UpdateScore(_score);
        
+    }
+    public void HomingMissileActive()
+    {
+        _isHomingMissileActive = true;
+        _missileCount = 3;
     }
    
 }

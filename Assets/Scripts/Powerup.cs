@@ -10,7 +10,6 @@ public class Powerup : MonoBehaviour
     private AudioClip _clip;
     [SerializeField]
     private bool _isMultiLaserPowerup;
-    [SerializeField]
     private float _range = 5.5f;
     private Player _player;
     // Start is called before the first frame update
@@ -72,6 +71,9 @@ public class Powerup : MonoBehaviour
                         break;
                     case 6:
                         player.SlowSpeedActive();
+                        break;
+                    case 7:
+                        player.HomingMissileActive();
                         break;
                     default:
                         Debug.Log("Default Value");

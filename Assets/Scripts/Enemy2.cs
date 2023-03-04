@@ -49,9 +49,9 @@ public class Enemy2 : MonoBehaviour
         }
         RaycastHit2D hit = Physics2D.CircleCast(transform.position, 1.5f, Vector3.down, LayerMask.GetMask("Laser"));
 
-        if(hit.collider != null)
+        if (hit.collider != null)
         {
-            if(hit.collider.CompareTag("Laser"))
+            if (hit.collider.CompareTag("Laser"))
             {
                 Debug.Log("The Player Laser was detected");
                 transform.Translate(Vector3.right + Vector3.up * (_speed * 3) * Time.deltaTime);
@@ -108,6 +108,20 @@ public class Enemy2 : MonoBehaviour
             _audioSource.Play();
             _spawnManager.EnemyDeath();
             //Collider is destroyed to disable explosion sound after one shot.
+            Destroy(GetComponent<Collider2D>());
+            Destroy(this.gameObject, 2.3f);
+        }
+        if (other.tag == "Missile")
+        {
+            Destroy(other.gameObject);
+            if (_player != null)
+            {
+                _player.AddScore(Random.Range(7, 9));
+            }
+            _anim.SetTrigger("OnEnemyDeath");
+            _speed = 0;
+            _audioSource.Play();
+            _spawnManager.EnemyDeath();
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 2.3f);
         }

@@ -45,8 +45,8 @@ public class SpawnManager : MonoBehaviour
             _enemiesDead = 0;
             _waveNumber = wavenumber;
             _uiManager.DisplayWaveNumber(_waveNumber);           
-            _enemiesLeft = _waveNumber + 10;
-            _maxEnemies = _waveNumber + 10;
+            _enemiesLeft = _waveNumber + 5;
+            _maxEnemies = _waveNumber + 5;
             StartCoroutine(SpawnPowerupRoutine());
             StartCoroutine(SpawnRarePowerupRoutine());
             StartCoroutine(SpawnFrequentPowerupRoutine());            
@@ -95,7 +95,6 @@ public class SpawnManager : MonoBehaviour
             yield return new WaitForSeconds(5.0f);
         }
         StartSpawning(_waveNumber + 1);
-        StartCoroutine(SpawnRareEnemyRoutine());
         
     }
     IEnumerator SpawnRareEnemyRoutine()
@@ -165,14 +164,14 @@ public class SpawnManager : MonoBehaviour
     }
     IEnumerator SpawnRarePowerupRoutine()
     {
-        yield return new WaitForSeconds(20.0f);
+        yield return new WaitForSeconds(1.0f);
         while (_stopSpawning == false)
         {
-            int randomPowerup = Random.Range(0, 3);
+            int randomPowerup = Random.Range(0, 5);
             //posToSpawn is only local to this while loop                       
             Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
             Instantiate(rarepowerups[randomPowerup], posToSpawn, Quaternion.identity);
-            yield return new WaitForSeconds(Random.Range(15f, 30f));
+            yield return new WaitForSeconds(Random.Range(2f, 3f));
         }
     }
     IEnumerator SpawnFrequentPowerupRoutine()

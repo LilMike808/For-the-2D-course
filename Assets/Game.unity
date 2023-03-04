@@ -947,6 +947,7 @@ MonoBehaviour:
   _rightEngine: {fileID: 946114657}
   _leftEngine: {fileID: 1281761498}
   _thruster: {fileID: 2074244010}
+  _homingMissilePrefab: {fileID: 1549644008011274760, guid: 5f3e435a72e965f4f9d058914a2d66a6, type: 3}
   _fuelPercentage: 100
   _refuelSpeed: 3
   _fireRate: 0.15
@@ -1013,7 +1014,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 749199528}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.59, y: 2.73, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 2074244011}
@@ -2064,6 +2065,7 @@ MonoBehaviour:
   - {fileID: 3232201612108820547, guid: dec8a7c34f2f0bc4c96c5587c5742d0c, type: 3}
   - {fileID: 5785737819845213497, guid: 98522c10d1921254497d65db024f3752, type: 3}
   - {fileID: 428109783036518751, guid: a8956cd917c963b47944875db84329fc, type: 3}
+  - {fileID: 7562293262178352520, guid: 667c1b405603d884b9744372ae22d9a5, type: 3}
   frequentpowerups:
   - {fileID: 1453275136360523488, guid: 14b1c51e51d27c946abdc9d26ed11cac, type: 3}
   commonenemies:
