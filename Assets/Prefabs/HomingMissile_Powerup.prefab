@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -5641186759005371787}
   m_Layer: 0
   m_Name: HomingMissile_Powerup
-  m_TagString: Untagged
+  m_TagString: Powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 621890249
   m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: a8a80f12afb94a0458db764cb7db88b7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -147,3 +147,9 @@ MonoBehaviour:
   powerupID: 7
   _clip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
   _isMultiLaserPowerup: 0
+  _isNegativePowerup: 0
+  _isTripleShotPowerup: 0
+  _isHealthPowerup: 0
+  _isAmmoPowerup: 0
+  _isMissilePowerup: 1
+  _upInSmoke: {fileID: 7360275829887065761, guid: 01e00713d95c6024aa9ee7f241e2393a, type: 3}

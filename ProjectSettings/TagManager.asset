@@ -9,6 +9,22 @@ TagManager:
   - SpawnManager
   - Powerup
   - Missile
+  - NegativePowerup
+  - Boss
+  - Enemy2
+  - Enemy3
+  - Enemy4
+  - Thruster
+  - Orb
+  - Pulse
+  - Enemy5
+  - Lightning
+  - RotatingBox
+  - Expansion Ring
+  - DreadBoss
+  - Rod
+  - SmallExplosion
+  - Grenade
   layers:
   - Default
   - TransparentFX

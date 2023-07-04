@@ -7,29 +7,29 @@ public class Enemy2 : MonoBehaviour
     private Player _player;
     private Animator _anim;
     [SerializeField]
-    private AudioSource _audioSource;
+    private GameObject _thruster;
+    [SerializeField]
+    private AudioSource _lasersSoundEffect;
+    [SerializeField]
+    private AudioSource _explosionSoundEffect;
+    [SerializeField]
+    private AudioSource _whooshSound;
     private SpawnManager _spawnManager;
-    private float _speed = 5.8f;
-    private int _enemyMovement;
+    private float _speed = 4.2f;
     [SerializeField]
     private GameObject _enemy2Lasers;
-    private float _fireRate = 3f;
+    private float _fireRate = 9f;
     private float _canFire = -1f;
+    private SpriteRenderer _spriteRenderer;
+    private bool _isEnemyLaser = false;
     // Start is called before the first frame update
     void Start()
     {
-        _player = GameObject.Find("Player").GetComponent<Player>();
-        if(_player == null)
-        {
-            Debug.LogError("The Player is NULL");
-        }
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _player = GameObject.FindObjectOfType<Player>();
         _spawnManager = GameObject.FindObjectOfType<SpawnManager>();
-        _anim = GetComponent<Animator>();
-        _audioSource = GetComponent<AudioSource>(); 
-        
-        _enemyMovement = Random.Range(1, 3);
+        _anim = GetComponentInChildren<Animator>();     
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -46,84 +46,94 @@ public class Enemy2 : MonoBehaviour
             {
                 Lasers[i].AssignEnemyLaser();
             }
+            _lasersSoundEffect.Play();
         }
         RaycastHit2D hit = Physics2D.CircleCast(transform.position, 1.5f, Vector3.down, LayerMask.GetMask("Laser"));
 
-        if (hit.collider != null)
+        if (hit.collider != null && _speed > 0)
         {
+            //Noticed this applies to its own laser too but that's fine.
             if (hit.collider.CompareTag("Laser"))
             {
-                Debug.Log("The Player Laser was detected");
                 transform.Translate(Vector3.right + Vector3.up * (_speed * 3) * Time.deltaTime);
-            }
+                _whooshSound.Play();
+            }            
         }
     }
     void CalculateMovement()
     {
+        transform.Translate(Vector3.down * _speed * Time.deltaTime);
 
-        if (_enemyMovement == 1)
+        if (transform.position.y <= 0 && transform.position.x >= 0)
         {
             transform.Translate(Vector3.left * _speed * Time.deltaTime);
         }
-        if (_enemyMovement == 2)
+
+        if (transform.position.y <= 0 && transform.position.x <= 0)
         {
             transform.Translate(Vector3.right * _speed * Time.deltaTime);
         }
+        
         if (transform.position.x > 11.75f)
         {
-            float randomx = Random.Range(-1f, 5.60f);
-            transform.position = new Vector3(-11.75f, randomx, 0);
+     
+            transform.position = new Vector3(Random.Range(-8, 8), 8, 0);
         }
-        if (transform.position.x < -11.75f)
+        if (transform.position.x < -11.75f && transform.position.y < -5)
         {
-            float randomy = Random.Range(-1f, 5.60f);
-            transform.position = new Vector3(11.75f, randomy, 0);
+            
+            transform.position = new Vector3(Random.Range(-8, 8), 8, 0);
         }
+        if(transform.position.y < -6)
+        {
+            transform.position = new Vector3(Random.Range(-8, 8), 8, 0);
+        }
+    }
+    public void IsEnemyLaser()
+    {
+        _isEnemyLaser = true;
+    }
+    void Destroyed()
+    {
+        _thruster.gameObject.SetActive(false);
+        _anim.SetTrigger("OnEnemyDeath");
+        _speed = 0;
+        _explosionSoundEffect.Play();
+        if (_player != null)
+        {
+            _player.AddScore(Random.Range(5, 7));
+        }
+        Destroy(GetComponent<Collider2D>());
+        gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        _spawnManager.EnemyDeath();
+        Destroy(this.gameObject, 2.3f);
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.tag == "Player" && _speed > 0)
+        if (other.tag == "Player")
         {
+            Destroyed();
             Player player = other.transform.GetComponent<Player>();
-            if(player != null)
+            if (player != null)
             {
                 player.Damage();
             }
-            _anim.SetTrigger("OnEnemyDeath");
-            _speed = 0;
-            _audioSource.Play();
-            _spawnManager.EnemyDeath();
-            Destroy(this.gameObject, 2.3f);
         }
-        if(other.tag == "Laser")
+        if (other.tag == "Thruster")
         {
-            Destroy(other.gameObject);
-
-            if(_player != null)
-            {
-                _player.AddScore(Random.Range(7,9));
-            }
-            _anim.SetTrigger("OnEnemyDeath");
-            _speed = 0;
-            _audioSource.Play();
-            _spawnManager.EnemyDeath();
-            //Collider is destroyed to disable explosion sound after one shot.
-            Destroy(GetComponent<Collider2D>());
-            Destroy(this.gameObject, 2.3f);
+            Destroyed();
         }
-        if (other.tag == "Missile")
+        if (other.tag == "Laser" && _isEnemyLaser == false)
         {
-            Destroy(other.gameObject);
-            if (_player != null)
-            {
-                _player.AddScore(Random.Range(7, 9));
-            }
-            _anim.SetTrigger("OnEnemyDeath");
-            _speed = 0;
-            _audioSource.Play();
-            _spawnManager.EnemyDeath();
-            Destroy(GetComponent<Collider2D>());
-            Destroy(this.gameObject, 2.3f);
+            Destroyed();
+        }
+        if(other.tag == "Missile")
+        {
+            Destroyed();
+        }
+        if(other.tag == "Rod")
+        {
+            Destroyed();
         }
     }
 }

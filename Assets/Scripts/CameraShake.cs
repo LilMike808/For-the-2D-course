@@ -4,59 +4,59 @@ using UnityEngine;
 
 public class CameraShake : MonoBehaviour
 {
-    [SerializeField]
-    private float _newFOV = 10f;
-    [SerializeField]
-    private float _newXPos = 0.25f;
-    [SerializeField]
-    private float _newYPos = 0.25f;
-    [SerializeField]
-    private float _newRotation = 2f;
-    [SerializeField]
-    private float _duration = 0.1f;
+    private Vector3 _initialPosition;
+    private bool _isShaking;
+    private bool _gameOver;
 
-    //original values
-    private float _originalFOV;
-    private Vector3 _originalPOS;
-
-    //accompanying variables
-    private WaitForSeconds _delay;
-    private Vector3 _newPOS;
-    private Vector3 _invertXYPos;
-    private Vector3 _newRot;
-
-    // Start is called before the first frame update
+   
     void Start()
     {
-        //initialize original camera values
-        _originalFOV = Camera.main.fieldOfView;
-        _originalPOS = Camera.main.transform.position;
-
-        //initialize help variables with the new values
-        _delay = new WaitForSeconds(_duration / 3f);
-        _newPOS = new Vector3(_newXPos, -_newYPos, Camera.main.transform.position.z);
-        _invertXYPos = new Vector3(0, 0, _newRotation);
+        _initialPosition = transform.position;
         
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(_isShaking == true && _gameOver == false)
+        {
+            StartCoroutine(ShakingRoutine());
+        }
+        else if(_isShaking == false)
+        {
+            transform.position = _initialPosition;
+        }
     }
-    public IEnumerator ShakeCamera()
+    public void ShakeCamera()
     {
-        //change values inbetween delays to simulate camera shake
-        Camera.main.fieldOfView = _newFOV;
-        yield return _delay;
-
-        Camera.main.transform.position = Vector3.Scale(_invertXYPos, _newPOS);
-        Camera.main.transform.eulerAngles = _newRot;
-        yield return _delay;
-
-        //return to normal state
-        Camera.main.fieldOfView = _originalFOV;
-        Camera.main.transform.position = _originalPOS;
-        Camera.main.transform.eulerAngles = Vector3.zero;
+        _isShaking = true;
+        StartCoroutine(ShakeTimeRoutine());
     }
+    public void GameOver()
+    {
+        _gameOver = true;
+    }
+    IEnumerator ShakeTimeRoutine()
+    {
+        yield return new WaitForSeconds(0.45f);
+        _isShaking = false;
+    }
+    IEnumerator ShakingRoutine()
+    {
+        while(_isShaking)
+        {
+            transform.position = _initialPosition;
+            yield return new WaitForSeconds(0.1f);
+
+            transform.position = new Vector3(transform.position.x + 0.03f, transform.position.y + 0.03f, transform.position.z + 0.03f);
+            yield return new WaitForSeconds(0.2f);
+
+            transform.position = _initialPosition;
+            yield return new WaitForSeconds(0.1f);
+
+            transform.position = new Vector3(transform.position.x + 0.04f, transform.position.y + 0.04f, transform.position.z + 0.04f);
+            yield return new WaitForSeconds(0.2f);
+        }
+    }
+   
 }

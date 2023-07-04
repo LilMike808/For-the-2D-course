@@ -74,7 +74,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 621890249
   m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: ed6681d697652144a913093bf7ad1d43, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -148,7 +148,12 @@ MonoBehaviour:
   powerupID: 0
   _clip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
   _isMultiLaserPowerup: 0
-  _range: 3
+  _isNegativePowerup: 0
+  _isTripleShotPowerup: 1
+  _isHealthPowerup: 0
+  _isAmmoPowerup: 0
+  _isMissilePowerup: 0
+  _upInSmoke: {fileID: 7360275829887065761, guid: 01e00713d95c6024aa9ee7f241e2393a, type: 3}
 --- !u!95 &4964452522149181488
 Animator:
   serializedVersion: 5

@@ -5,198 +5,176 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject _enemyPrefab;
-    [SerializeField]
-    private GameObject _enemy2Prefab;
-    [SerializeField]
     private GameObject _enemyContainer;
     [SerializeField]
-    private GameObject[] powerups;
+    private GameObject[] _enemyType;
     [SerializeField]
-    private GameObject[] rarepowerups;
+    private GameObject[] _stars;
     [SerializeField]
-    private GameObject[] frequentpowerups;
+    private GameObject[] _randomPowerup;
     [SerializeField]
-    private GameObject[] commonenemies;
-    [SerializeField]
-    private GameObject[] rareenemies;
-    [SerializeField]
-    private GameObject[] UFO;
-    [SerializeField]
-    private GameObject[] enemy4;
+    private GameObject _dreadBoss;
     private bool _stopSpawning = false;
+    private bool _stopSpawningEnemies = false;
+    [SerializeField]
     private int _waveNumber;
+    [SerializeField]
     private int _enemiesDead;
+    [SerializeField]
     private int _maxEnemies;
-    private int _enemiesLeft;
     private UI_Manager _uiManager;
+    private AudioManager _audioManager;
+    [SerializeField]
+    private AudioSource _waveSoundEffect;
+    [SerializeField]
+    private AudioSource _bossMusic;
+    private PlanetLeave _planetLeave;
+    private Player _player;
+    public int total;
+    public int randomNumber;
+    public int[] table =
+    {
+        40, //ammoPowerup
+        16, //health pickup
+        13, //shield
+        12, //Negative
+        8,  //TripleShot
+        6, //SpeedBoost
+        3, //Missile
+        2 //Multidirectional
+    };
     // Start is called before the first frame update
     void Start()
     {
+        _audioManager = GameObject.FindObjectOfType<AudioManager>();
         _uiManager = GameObject.FindObjectOfType<UI_Manager>();
+        _player = GameObject.FindObjectOfType<Player>();
+        _planetLeave = GameObject.FindObjectOfType<PlanetLeave>();
+        foreach (var item in table)
+        {
+            total += item;
+        }
+    }
+    public void StartSpawning()
+    {
+        _planetLeave.Down();
+        StartCoroutine(SpawnRandomPowerupsRoutine());
+        StartCoroutine(SpawnStarsRoutine());
+        SpawnWave(1);
     }
 
-    //public void is a method other scripts can communicate with.
-    public void StartSpawning(int wavenumber)
+    private void SpawnWave(int wavenumber)
     {
-        if (wavenumber <= 5)
+        if (wavenumber <= 6)
         {
+           
+            _stopSpawningEnemies = false;
             _stopSpawning = false;
-            _enemiesDead = 0;
             _waveNumber = wavenumber;
-            _uiManager.DisplayWaveNumber(_waveNumber);           
-            _enemiesLeft = _waveNumber + 5;
-            _maxEnemies = _waveNumber + 5;
-            StartCoroutine(SpawnPowerupRoutine());
-            StartCoroutine(SpawnRarePowerupRoutine());
-            StartCoroutine(SpawnFrequentPowerupRoutine());            
-            
-            if(wavenumber >= 1)
+            _uiManager.DisplayWaveNumber(wavenumber);
+            if(_waveNumber < 6)
             {
+                if (_waveNumber < 6)
+                {
+                    _waveSoundEffect.Play();
+                }
+                _enemiesDead = 0;
+                _maxEnemies = 6 + _waveNumber;
                 StartCoroutine(SpawnEnemyRoutine());
             }
-            if (wavenumber >= 2)
-            {              
-                StartCoroutine(SpawnRareEnemyRoutine());
-            }
-            if(wavenumber >= 3)
+            if (_waveNumber == 2)
             {
-                StartCoroutine(SpawnUFOEnemyRoutine());
+                _planetLeave.DownSlower();
             }
-            if(wavenumber >= 4)
+            if(_waveNumber == 4)
             {
-                StartCoroutine(SpawnEnemy4Routine());
+                _planetLeave.DownLater();
             }
-            if(wavenumber > 5)
+            if (_waveNumber == 6)
             {
-                _stopSpawning = true;
+                _audioManager.KillBackgroundMusic();
+                _player.KeepSpeedMusicFromPlaying();
+                Vector3 posToSpawn = new Vector3(0, 8.86f, 0);
+                Instantiate(_dreadBoss, posToSpawn, Quaternion.identity);
+                _uiManager.TurnBossHealthOn();
+                _bossMusic.Play();
+                _audioManager.TurnBackgroundMusicOff(true);
             }
-            
         }
     }
-
+    public void KillBossMusic()
+    {
+        _bossMusic.Stop();
+    }
     IEnumerator SpawnEnemyRoutine()
     {
-        yield return new WaitForSeconds(3.0f);
-
-        while (_stopSpawning == false && _enemiesDead <= _maxEnemies)
+        yield return new WaitForSeconds(2.3f);
+        if (_stopSpawningEnemies == false)
         {
-            Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
-            GameObject newEnemy = Instantiate(commonenemies[Random.Range(0, 1)], posToSpawn, Quaternion.identity);
-            //because newEnemy equals the Instantiate process and is a GameObject, we can access the parent object through its transform
-            //which is assigned to the transform of _enemyContainer.
-            newEnemy.transform.parent = _enemyContainer.transform;
-            _enemiesLeft--;
-            if (_enemiesLeft <= 0)
+            for (int i = 0; i < _maxEnemies; i++)
             {
-                _enemiesLeft = 0;
-                _stopSpawning = true;
+                Vector3 posToSpawn = new Vector3(Random.Range(-8, 8), 8, 0);
+                GameObject newEnemy = Instantiate(_enemyType[Random.Range(0, _waveNumber)], posToSpawn, Quaternion.identity);
+                newEnemy.transform.parent = _enemyContainer.transform;
+                yield return new WaitForSeconds(5.0f);
             }
-            yield return new WaitForSeconds(5.0f);
         }
-        StartSpawning(_waveNumber + 1);
-        
-    }
-    IEnumerator SpawnRareEnemyRoutine()
-    {
-        while (_stopSpawning == false && _enemiesDead <= _maxEnemies)
+        while(_enemiesDead < _maxEnemies)
         {
-            Vector3 posToSpawn = new Vector3(-11.75F, Random.Range(2, 6.5f), 0);
-            GameObject newEnemy = Instantiate(rareenemies[Random.Range(0, 1)], posToSpawn, Quaternion.identity);
-            newEnemy.transform.parent = _enemyContainer.transform;
-            _enemiesLeft--;
-            if (_enemiesLeft <= 0)
-            {
-                _enemiesLeft = 0;
-                _stopSpawning = true;
-            }
-            yield return new WaitForSeconds(5.0f);
+            yield return null;
         }
+        _waveNumber++;
+        SpawnWave(_waveNumber);
     }
-    IEnumerator SpawnUFOEnemyRoutine()
+    IEnumerator SpawnStarsRoutine()
     {
-        yield return new WaitForSeconds(4.0f);
-        while (_stopSpawning == false && _enemiesDead <= _maxEnemies)
-        {
-            Vector3 posToSpawn = new Vector3(-11.75f, -5, 0);
-            GameObject newEnemy = Instantiate(UFO[Random.Range(0, 1)], posToSpawn, Quaternion.identity);
-            newEnemy.transform.parent = _enemyContainer.transform;
-            _enemiesLeft--;
-            if (_enemiesLeft <= 0)
-            {
-                _enemiesLeft = 0;
-                _stopSpawning = true;
-            }
-            yield return new WaitForSeconds(5.0f);
-        }
-    }
-    IEnumerator SpawnEnemy4Routine()
-    {
-        yield return new WaitForSeconds(3.0f);
-
-        while (_stopSpawning == false && _enemiesDead <= _maxEnemies)
-        {
-            Vector3 posToSpawn = new Vector3(Random.Range(0f, 8f), 7, 0);
-            GameObject newEnemy = Instantiate(enemy4[Random.Range(0, 1)], posToSpawn, Quaternion.identity);
-            newEnemy.transform.parent = _enemyContainer.transform;
-            _enemiesLeft--;
-            if (_enemiesLeft <= 0)
-            {
-                _enemiesLeft = 0;
-                _stopSpawning = true;
-            }
-            yield return new WaitForSeconds(5.0f);
-        }       
-    }
-    
-
-    IEnumerator SpawnPowerupRoutine()
-    {
-        yield return new WaitForSeconds(3.0f);
-        while(_stopSpawning == false)
-        {
-            int randomPowerup = Random.Range(0, 3);
-            //posToSpawn is only local to this while loop                       
-            Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f),7, 0);
-            Instantiate(powerups[randomPowerup], posToSpawn, Quaternion.identity);
-            yield return new WaitForSeconds(Random.Range(3f, 8f));
-        }
-    }
-    IEnumerator SpawnRarePowerupRoutine()
-    {
-        yield return new WaitForSeconds(1.0f);
         while (_stopSpawning == false)
         {
-            int randomPowerup = Random.Range(0, 5);
-            //posToSpawn is only local to this while loop                       
-            Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
-            Instantiate(rarepowerups[randomPowerup], posToSpawn, Quaternion.identity);
-            yield return new WaitForSeconds(Random.Range(2f, 3f));
+            Vector3 posToSpawn = new Vector3(Random.Range(-10, 10), 8.5f, 0);
+            Instantiate(_stars[Random.Range(0, 6)], posToSpawn, Quaternion.identity);
+            yield return new WaitForSeconds(Random.Range(0.1f, 3.1f));
         }
     }
-    IEnumerator SpawnFrequentPowerupRoutine()
+
+    
+    private int RandomPowerup()
     {
-        yield return new WaitForSeconds(2.0f);
-        while(_stopSpawning == false)
+        randomNumber = Random.Range(0, total);
+        for (int i = 0; i < table.Length; i++)
         {
-            int randomPowerup = Random.Range(0, 1);
-            Vector3 PosToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
-            Instantiate(frequentpowerups[randomPowerup], PosToSpawn, Quaternion.identity);
-            yield return new WaitForSeconds(Random.Range(2f, 6f));
+            if (randomNumber <= table[i])
+            {
+                return i;
+            }
+            else
+            {
+                randomNumber -= table[i];
+            }
+        }
+        return 0;
+    }
+    public void StopSpawningPowerups()
+    {
+        _stopSpawning = true;
+    }
+    IEnumerator SpawnRandomPowerupsRoutine()
+    {
+        while (_stopSpawning == false)
+        {
+            yield return new WaitForSeconds(3.0f);
+            Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
+            Instantiate(_randomPowerup[RandomPowerup()], posToSpawn, Quaternion.identity);
+            yield return new WaitForSeconds(Random.Range(2, 5));
         }
     }
+
     public void OnPlayerDeath()
     {
         _stopSpawning = true;
+        _stopSpawningEnemies = true;
     }
     public void EnemyDeath()
     {
         _enemiesDead++;
-        if(_enemiesDead == _maxEnemies)
-        {
-            new WaitForSeconds(3.0f);
-            _waveNumber++;
-            _uiManager.DisplayWaveNumber(_waveNumber);
-        }
     }
 }

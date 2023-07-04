@@ -10,13 +10,25 @@ public class UI_Manager : MonoBehaviour
     [SerializeField]
     private Text _gameOverText;
     [SerializeField]
+    private Text _victoryText;
+    [SerializeField]
     private Text _restartText;
     [SerializeField]
     private Text _ammoText;
     [SerializeField]
+    private Text _clueText;
+    [SerializeField]
     private Slider _thrusterSlider;
     [SerializeField]
+    private Slider _bossHealth;
+    [SerializeField]
+    private GameObject _magicRedButton;
+    [SerializeField]
+    private GameObject _magicGreenButton;
+    [SerializeField]
     private Text _fuelPercentageText;
+    [SerializeField]
+    private Text _healthPercentageText;
     [SerializeField]
     private Text _waveDisplay;
     [SerializeField]
@@ -24,6 +36,9 @@ public class UI_Manager : MonoBehaviour
     [SerializeField]
     private Sprite[] _liveSprites;
     private GameManager _gameManager;
+    private AudioManager _audioManager;
+    private bool _wasAsteroidDestroyed = false;
+    private Vector3 _endPosition = new Vector3(1000, 1600, 0);
 
     // Start is called before the first frame update
     void Start()
@@ -31,18 +46,29 @@ public class UI_Manager : MonoBehaviour
         _scoreText.text = "Score: ";
         _ammoText.text = "Ammo: 15/15";
         _gameOverText.gameObject.SetActive(false);
+        _audioManager = GameObject.FindObjectOfType<AudioManager>();
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
-
         if(_gameManager == null)
         {
             Debug.LogError("Game Manager is NULL");
         }
     }
-
-    // Update is called once per frame
+    //update is called once per frame
     void Update()
     {
-
+        if(_clueText.transform.position != _endPosition)
+        {
+            _clueText.transform.position = Vector3.MoveTowards(_clueText.transform.position, _endPosition, 86 * Time.deltaTime);
+        }
+        if (_clueText.transform.position == _endPosition || _wasAsteroidDestroyed == true)
+        {
+            _clueText.gameObject.SetActive(false); 
+        }
+       
+    }
+    public void DestroyClueText()
+    {
+        _wasAsteroidDestroyed = true;
     }
     public void UpdateScore(int PlayerScore)
     {
@@ -69,12 +95,51 @@ public class UI_Manager : MonoBehaviour
         _thrusterSlider.value = fuelpercentage;
         _fuelPercentageText.text = Mathf.RoundToInt(fuelpercentage) + "%";
     }
+    public void MPulseUI()
+    {
+        StartCoroutine(MPulseUIRoutine());
+    }
+    IEnumerator MPulseUIRoutine()
+    {
+        _magicRedButton.gameObject.SetActive(false);
+        yield return new WaitForSeconds(6f);
+        _magicRedButton.gameObject.SetActive(true);
+    }
+    public void XRodUI()
+    {
+        StartCoroutine(XRodUIRoutine());
+    }
+    IEnumerator XRodUIRoutine()
+    {
+        _magicGreenButton.gameObject.SetActive(false);
+        yield return new WaitForSeconds(12f);
+        _magicGreenButton.gameObject.SetActive(true);
+    }
+    public void UpdateBossHealth(int healthpercentage)
+    {
+        _bossHealth.value = healthpercentage;
+        _healthPercentageText.text = Mathf.RoundToInt(healthpercentage) + "%";
+        if(healthpercentage <= 0)
+        {
+            _bossHealth.gameObject.SetActive(false);
+        }
+    }
     void GameOverSequence()
     {
         _gameManager.GameOver();
+        _audioManager.GameOverMusic();
         _gameOverText.gameObject.SetActive(true);
         _restartText.gameObject.SetActive(true);
         StartCoroutine(GameOverFlickerRoutine());
+    }
+    public void VictorySequence()
+    {
+        _victoryText.gameObject.SetActive(true);
+        StartCoroutine(VictoryFlickerRoutine());
+    }
+    public void TurnBossHealthOn()
+    {
+        _bossHealth.gameObject.SetActive(true);
     }
     IEnumerator GameOverFlickerRoutine()
     {
@@ -87,19 +152,27 @@ public class UI_Manager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
     }
-    public void DisplayWaveNumber(int wavenumber)
+    IEnumerator VictoryFlickerRoutine()
     {
+        while (true)
+        {
+            _victoryText.text = "YOU WON!!!";
+            yield return new WaitForSeconds(0.5f);
+            _victoryText.text = "";
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+    public void DisplayWaveNumber(int wavenumber)
+    {   //the coroutine was instead called here, no bueno.
         _waveDisplay.text = "Wave: " + wavenumber;
         _waveDisplay.gameObject.SetActive(true);
-        StartCoroutine(WaveDisplayRoutine());
+         StartCoroutine(WaveDisplayRoutine());
     }
     IEnumerator WaveDisplayRoutine()
     {
-        while(_waveDisplay == true)
-        {
-            yield return new WaitForSeconds(2.5f);
-            _waveDisplay.gameObject.SetActive(false);
-        }
+        //this below was in a while loop.
+        yield return new WaitForSeconds(2.5f);
+        _waveDisplay.gameObject.SetActive(false);
     }
-
+    
 }
