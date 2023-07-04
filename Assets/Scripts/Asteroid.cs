@@ -55,7 +55,6 @@ public class Asteroid : MonoBehaviour
             Destroy(this.gameObject);
             int wavenumber = 1;
             _uiManager.DisplayWaveNumber(wavenumber);
-            _uiManager.DestroyClueText();
             _spawnManager.StartSpawning();
             
         }

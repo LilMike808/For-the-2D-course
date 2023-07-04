@@ -16,8 +16,6 @@ public class UI_Manager : MonoBehaviour
     [SerializeField]
     private Text _ammoText;
     [SerializeField]
-    private Text _clueText;
-    [SerializeField]
     private Slider _thrusterSlider;
     [SerializeField]
     private Slider _bossHealth;
@@ -37,8 +35,6 @@ public class UI_Manager : MonoBehaviour
     private Sprite[] _liveSprites;
     private GameManager _gameManager;
     private AudioManager _audioManager;
-    private bool _wasAsteroidDestroyed = false;
-    private Vector3 _endPosition = new Vector3(1000, 1600, 0);
 
     // Start is called before the first frame update
     void Start()
@@ -54,22 +50,6 @@ public class UI_Manager : MonoBehaviour
         }
     }
     //update is called once per frame
-    void Update()
-    {
-        if(_clueText.transform.position != _endPosition)
-        {
-            _clueText.transform.position = Vector3.MoveTowards(_clueText.transform.position, _endPosition, 86 * Time.deltaTime);
-        }
-        if (_clueText.transform.position == _endPosition || _wasAsteroidDestroyed == true)
-        {
-            _clueText.gameObject.SetActive(false); 
-        }
-       
-    }
-    public void DestroyClueText()
-    {
-        _wasAsteroidDestroyed = true;
-    }
     public void UpdateScore(int PlayerScore)
     {
         _scoreText.text = "Score: " + PlayerScore.ToString();
