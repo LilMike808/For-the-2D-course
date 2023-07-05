@@ -182,7 +182,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 30
+    m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -319,8 +319,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -43.4878, y: -99}
-  m_SizeDelta: {x: 1269.6428, y: 1032.4}
+  m_AnchoredPosition: {x: -2, y: -39.912}
+  m_SizeDelta: {x: 684.8784, y: 453.83}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &876194591
 MonoBehaviour:
@@ -344,7 +344,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 50
+    m_FontSize: 25
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -403,8 +403,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 767.45825, y: -447.77692}
-  m_SizeDelta: {x: 226.9165, y: 89.3019}
+  m_AnchoredPosition: {x: 277, y: -153}
+  m_SizeDelta: {x: 188.2132, y: 47.824}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &911093802
 MonoBehaviour:
@@ -534,8 +534,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -43.4878, y: -99}
-  m_SizeDelta: {x: 1269.6428, y: 1032.4}
+  m_AnchoredPosition: {x: 19, y: -85}
+  m_SizeDelta: {x: 787, y: 450}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1032075488
 MonoBehaviour:
@@ -559,7 +559,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 50
+    m_FontSize: 30
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -571,7 +571,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: The 'C' button will 'pull' powerups into Player always without fail if
-    they reach a certain vicinity.
+    they reach a certain vicinity from the Player.
 --- !u!222 &1032075489
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -620,7 +620,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 50
+    m_FontSize: 25
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -631,10 +631,10 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: The 'X' Button will extend 2 non-projectile 'rods' at the sides of the
-    Player. This will damage every Enemy type but is most effective against purple
-    "Enemy2" whom dodges Player Lasers. This function has a long 'cooldown' period
-    before it can be utilized again.
+  m_Text: "The 'X' Button will extend 2 non-projectile 'rods' at the sides of the
+    Player. This will damage every Enemy type but is most effective against pink
+    \"Enemy2\" that dodges Player Lasers. \n\nThis function has a long 'cooldown'
+    period before it can be utilized again."
 --- !u!222 &1121418234
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -659,8 +659,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -43.4878, y: -99}
-  m_SizeDelta: {x: 1269.6428, y: 1032.4}
+  m_AnchoredPosition: {x: -76, y: -32}
+  m_SizeDelta: {x: 545.8262, y: 450}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1179573483
 GameObject:
@@ -768,7 +768,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 50
+    m_FontSize: 25
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -808,8 +808,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -43.4878, y: -99}
-  m_SizeDelta: {x: 1269.6428, y: 1032.4}
+  m_AnchoredPosition: {x: -49, y: -55}
+  m_SizeDelta: {x: 582.89, y: 450}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1339392982
 GameObject:
@@ -938,8 +938,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -43.4878, y: -99}
-  m_SizeDelta: {x: 1269.6428, y: 1032.4}
+  m_AnchoredPosition: {x: -68, y: -72}
+  m_SizeDelta: {x: 570.91, y: 450}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1470612120
 MonoBehaviour:
@@ -963,7 +963,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 50
+    m_FontSize: 25
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -1019,7 +1019,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -494, y: -396}
+  m_AnchoredPosition: {x: -181, y: -229}
   m_SizeDelta: {x: 356.2131, y: 135.6532}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1506583302
@@ -1044,11 +1044,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 30
+    m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 40
+    m_MaxSize: 120
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -1113,7 +1113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -1224,8 +1224,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -43.4878, y: -99}
-  m_SizeDelta: {x: 1269.6428, y: 1032.4}
+  m_AnchoredPosition: {x: -38, y: -26}
+  m_SizeDelta: {x: 663.5598, y: 450}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1694119987
 MonoBehaviour:
@@ -1249,7 +1249,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 50
+    m_FontSize: 25
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
